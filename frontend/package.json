@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "dev:all": "concurrently \"npm run dev\" \"npm run dev --prefix backend\""
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev --prefix ../backend\""
   },
   "dependencies": {
     "framer-motion": "^13.2.0",

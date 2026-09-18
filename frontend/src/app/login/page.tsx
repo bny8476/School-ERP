@@ -447,6 +447,16 @@ export default function LoginPage() {
                   >
                     Parent
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmail("student@school.com");
+                      setPassword("password123");
+                    }}
+                    className="px-2.5 py-1 bg-white dark:bg-slate-900 hover:bg-[#0050CB] hover:text-white text-[10px] font-bold text-[#0050CB] dark:text-[#38BDF8] rounded-lg transition-colors cursor-pointer border border-[#0050CB]/20 shadow-2xs"
+                  >
+                    Student
+                  </button>
                 </div>
               </div>
 

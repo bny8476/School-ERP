@@ -106,6 +106,7 @@ export const loginUser = async (req: Request, res: Response) => {
       'admin@schoolerp.com': { firstName: 'System', lastName: 'Admin', role: 'SuperAdmin' },
       'teacher@school.com': { firstName: 'Tom', lastName: 'Teacher', role: 'Teacher' },
       'parent@school.com': { firstName: 'Patty', lastName: 'Parent', role: 'Parent' },
+      'student@school.com': { firstName: 'Sammy', lastName: 'Student', role: 'Student' },
       'accountant@school.com': { firstName: 'Alice', lastName: 'Accountant', role: 'Accountant' },
       'principal@school.com': { firstName: 'Peter', lastName: 'Principal', role: 'Principal' },
     };

@@ -54,11 +54,54 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   
   const isSuperAdmin = r === 'superadmin' || r === 'admin';
   const isPrincipal = r === 'principal' || isSuperAdmin;
-  const isTeacher = r === 'teacher' || isSuperAdmin;
+  const isTeacher = r === 'teacher';
 
-  const [expandedSubmenu, setExpandedSubmenu] = useState<string | null>('Form Builder & Surveys');
+  const [expandedSubmenu, setExpandedSubmenu] = useState<string | null>(null);
 
-  const navCategories = [
+  // Role-filtered navigation categories
+  const teacherNavCategories = [
+    {
+      category: 'MAIN',
+      items: [
+        { href: '/dashboard', label: 'Teacher Dashboard', icon: LayoutDashboard, show: true },
+        { href: '/dashboard/calendar', label: 'School Calendar', icon: Gift, show: true },
+        { href: '/dashboard/email', label: 'Email Client', icon: FileText, show: true },
+        { href: '/dashboard/todo', label: 'To-Do Tasks', icon: CheckCircle2, show: true },
+        { href: '/dashboard/notes', label: 'Notes & Ideas', icon: FileText, show: true },
+        { href: '/dashboard/file-manager', label: 'File Manager', icon: Package, show: true },
+      ],
+    },
+    {
+      category: 'MY CLASSROOM',
+      items: [
+        { href: '/dashboard/classroom', label: 'Digital Classroom', icon: BookOpen, show: true },
+        { href: '/dashboard/attendance', label: 'Attendance Engine', icon: UserCheck, show: true },
+        { href: '/dashboard/daily-activity', label: 'Daily Diary', icon: Activity, show: true },
+        { href: '/dashboard/lesson-planner', label: 'Lesson Planner', icon: Sliders, show: true },
+        { href: '/dashboard/curriculum', label: 'Curriculum & Syllabus', icon: BookOpen, show: true },
+        { href: '/dashboard/seating-plan', label: 'Seating Plan', icon: Users, show: true },
+        { href: '/dashboard/paper-generator', label: 'Paper Generator', icon: FileText, show: true },
+      ],
+    },
+    {
+      category: 'EXAMS & EVALUATION',
+      items: [
+        { href: '/dashboard/assessments', label: 'Exams & Assessment', icon: FileText, show: true },
+        { href: '/dashboard/online-exams', label: 'Online Exam Engine', icon: CheckCircle2, show: true },
+        { href: '/dashboard/students', label: 'Student 360°', icon: GraduationCap, show: true },
+      ],
+    },
+    {
+      category: 'CAMPUS & ACTIVITIES',
+      items: [
+        { href: '/dashboard/daycare', label: 'Day Care Logs', icon: Clock, show: true },
+        { href: '/dashboard/sports', label: 'Sports & Teams', icon: Trophy, show: true },
+        { href: '/dashboard/service-center', label: 'Service Requests', icon: LifeBuoy, show: true },
+      ],
+    },
+  ];
+
+  const adminNavCategories = [
     {
       category: 'MAIN',
       items: [
@@ -71,9 +114,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
       ],
     },
     {
-      category: 'PEOPLE & ACADEMICS',
+      category: 'ACADEMICS & CLASSROOM',
       items: [
         { href: '/dashboard/students', label: 'Student 360°', icon: GraduationCap, show: true },
+        { href: '/dashboard/classes', label: 'Classes & Sections', icon: Building2, show: true },
         { href: '/dashboard/attendance', label: 'Attendance Engine', icon: UserCheck, show: true },
         { href: '/dashboard/daily-activity', label: 'Daily Diary', icon: Activity, show: true },
         { href: '/dashboard/classroom', label: 'Digital Classroom', icon: BookOpen, show: true },
@@ -83,10 +127,22 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
       ],
     },
     {
-      category: 'MANAGEMENT & OPERATIONS',
+      category: 'ADMINISTRATION',
+      items: [
+        { href: '/dashboard/admissions', label: 'Admissions Pipeline', icon: GraduationCap, show: true },
+        { href: '/dashboard/fees', label: 'Fee Management', icon: DollarSign, show: true },
+        { href: '/dashboard/payroll', label: 'Staff Payroll', icon: WalletCards, show: isSuperAdmin },
+        { href: '/dashboard/teachers', label: 'Teacher Management', icon: Users, show: isSuperAdmin || isPrincipal },
+        { href: '/dashboard/parents', label: 'Parent Management', icon: Users, show: true },
+        { href: '/dashboard/transport', label: 'Transport & Fleet', icon: Bus, show: true },
+        { href: '/dashboard/reports', label: 'Reports & Analytics', icon: BarChart3, show: true },
+      ],
+    },
+    {
+      category: 'OPERATIONS & SYSTEM',
       items: [
         { href: '/dashboard/daycare', label: 'Day Care Logs', icon: Clock, show: true },
-        { href: '/dashboard/sports', label: 'Sports & Teams', icon: Activity, show: true },
+        { href: '/dashboard/sports', label: 'Sports & Teams', icon: Trophy, show: true },
         { 
           href: '/dashboard/form-builder', 
           label: 'Form Builder & Surveys', 
@@ -97,12 +153,15 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
             { href: '/dashboard/surveys', label: 'Surveys' },
           ]
         },
-        { href: '/dashboard/service-center', label: 'Internal Service Requests', icon: LifeBuoy, show: true },
+        { href: '/dashboard/service-center', label: 'Internal Requests', icon: LifeBuoy, show: true },
         { href: '/dashboard/campuses', label: 'Campuses & Branches', icon: Building2, show: isSuperAdmin },
         { href: '/dashboard/academic-closing', label: 'Academic Year Closing', icon: Lock, show: isSuperAdmin || isPrincipal },
+        { href: '/dashboard/audit-logs', label: 'Security & Audit Logs', icon: ShieldCheck, show: isSuperAdmin },
       ],
     },
   ];
+
+  const navCategories = isTeacher ? teacherNavCategories : adminNavCategories;
 
   return (
     <div className="flex h-screen bg-[#F0F4FA] dark:bg-[#000a1f] text-[#000E28] dark:text-white transition-colors duration-200 overflow-hidden font-saas">
@@ -370,23 +429,29 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
             </button>
 
             {/* User Profile Pill */}
-            <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 py-1 px-1.5 rounded-full transition-colors cursor-pointer">
-              <div className="relative">
-                <img
-                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=150&auto=format&fit=crop"
-                  alt="Mrs. Sarah Johnson"
-                  className="h-9 w-9 rounded-full object-cover ring-2 ring-[#0757D5]/20"
-                />
-              </div>
-              <div className="hidden sm:block text-left leading-tight pr-1">
-                <p className="text-xs font-extrabold text-[#07152F] dark:text-white truncate">
-                  Mrs. Sarah Johnson
-                </p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">
-                  Teacher
-                </p>
-              </div>
-            </div>
+            {(() => {
+              const displayName = user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : (isTeacher ? 'Teacher' : isSuperAdmin ? 'System Admin' : 'Admin User');
+              const displayRole = roleStr || (isTeacher ? 'Teacher' : isSuperAdmin ? 'Super Admin' : 'Staff');
+              const initials = user?.firstName
+                ? `${user.firstName[0]}${user.lastName ? user.lastName[0] : ''}`.toUpperCase()
+                : (isTeacher ? 'TT' : 'SA');
+
+              return (
+                <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 py-1 px-2 rounded-full transition-colors">
+                  <div className="w-8 h-8 rounded-full bg-[#0050CB] text-white font-black text-xs flex items-center justify-center ring-2 ring-[#0050CB]/25 shadow-xs shrink-0">
+                    {initials}
+                  </div>
+                  <div className="hidden sm:block text-left leading-tight pr-1">
+                    <p className="text-xs font-black text-[#000E28] dark:text-white truncate max-w-[140px]">
+                      {displayName}
+                    </p>
+                    <p className="text-[10px] text-[#0050CB] dark:text-[#38BDF8] font-bold">
+                      {displayRole}
+                    </p>
+                  </div>
+                </div>
+              );
+            })()}
           </div>
         </header>
 
